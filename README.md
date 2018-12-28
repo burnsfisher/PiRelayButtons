@@ -1,12 +1,11 @@
 
-# WB1FJ Antenna Control
+# WB1FJ Antenna Control aka Relay Button Control
 
-This is a GUI to control relays that switch a software defined
-radio connected to a telemetry computer and a TS-2000 among an
-omni dual band satellite antenna, an LEO Pack 70cm and 2m beam, 
-and a dual-band J-pole for local work
+This is a GUI to control relays using a button box.  The names of the relays are all based on my particular use of this software.  I am using it to drive relays and preamps that set up my ham radio rig the way I want it.  You can use it for anything, of course.
 
-##Relays:
+From here on, we have the description of *MY* use.  My intent is to switch a software defined radio receiver (telemetry) and a Kenwood TS-2000 (TS2K) in various combinations with an omni dual band satellite antenna, an LEO Pack 70cm and 2m beam,  and a dual-band J-pole for local work.
+
+## Relays:
 
 Preamp70:  Preamp on 70cm Beam
 Preamp2m:  Preamp on 2m Beam
