@@ -1,4 +1,12 @@
-Relays:
+
+# WB1FJ Antenna Control
+
+This is a GUI to control relays that switch a software defined
+radio connected to a telemetry computer and a TS-2000 among an
+omni dual band satellite antenna, an LEO Pack 70cm and 2m beam, 
+and a dual-band J-pole for local work
+
+##Relays:
 
 Preamp70:  Preamp on 70cm Beam
 Preamp2m:  Preamp on 2m Beam
