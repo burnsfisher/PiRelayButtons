@@ -49,5 +49,5 @@ UHF Telemetry	Beam|Preamp70|On
 "			            |TS2K| TS2K Bus
 "			            |SDR| SDR Bus
 
-
+[Schematic](AntennaSwitcher.png)
 
