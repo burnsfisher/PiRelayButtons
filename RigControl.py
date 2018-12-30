@@ -95,15 +95,9 @@ relaySpare2 = Relay(19,On)
 RelayList = [relayPreamp70,relayPreamp2m,relay2mBeamTS2KorSDR,relay70BeamTS2KorSDR,relayTS2KbeamOrJPole,
              relaySDRbeamOrOmni]
 NumberOfRelays = 6
-#Button Values
-UvButtonNum=0
-VuButtonNum=1
-RepeaterButtonNum=2
-UHFTlmButtonNum=3
-VHFTlmButtonNum=4
 
 RelayActionsForButton = [
-    #2mPre 70Pre 2mBeam 70Beam TS2KAnt SDRAnt
+    #2mPre 70Pre 2mBeam 70Beam TS2KAnt SDRAnt<-Relays
     [Off,  On,   TS2K,  TS2K,   Beam,  Omni], #UVButton
     [On,   Off,  TS2K,  TS2K,   Beam,  Omni], #VUButton
     [Off,  Off,  TS2K,  TS2K,   JPole, Omni], #Repeater
@@ -112,20 +106,29 @@ RelayActionsForButton = [
     ]
 
 
+
+
+
+#Button Values
+UvButtonNum=0
+VuButtonNum=1
+RepeaterButtonNum=2
+UHFTlmButtonNum=3
+VHFTlmButtonNum=4
+
 ## GUI definitions
 
 win = Tk()
 CurrentButton=IntVar()
 CurrentButton.set=UvButtonNum
 win.title="BF"
-#myFont = tk.font(family='Helvitica', size = 12, weight = "bold")
-#Button Event functions
 
+#Button Event Functions
 def Leave():
     GPIO.cleanup()
-    exit(0)
+    sys.exit(1)
     
-def RelaySwitch():
+def RelayGroupSwitch():
     thisButtonIndex = CurrentButton.get()
     print("Button number ",thisButtonIndex)
     RelaySettings = RelayActionsForButton[thisButtonIndex]
@@ -133,27 +136,30 @@ def RelaySwitch():
         thisRelay = RelayList[i]
         thisRelay.set(RelaySettings[i])
         print("Relay #",i,"is set to ",RelaySettings[i])
-    
+
+def RelaySingleSwitch():
+    print("Single Switch")
 ##    thisButton = AllButtons[thisButtonIndex]
 #### Widgets
+    #Checkbutton--
 
-SatComUvButton = Radiobutton(win,text = "U/v Satcom",command=RelaySwitch)
+SatComUvButton = Radiobutton(win,text = "U/v Satcom",command=RelayGroupSwitch,selectcolor="Red")
 SatComUvButton.pack(anchor=W)
 SatComUvButton.config(variable=CurrentButton,value=UvButtonNum,indicatoron=False)
 
-SatComVuButton = Radiobutton(win,text = "V/u Satcom",command=RelaySwitch)
+SatComVuButton = Radiobutton(win,text = "V/u Satcom",command=RelayGroupSwitch,selectcolor="Red")
 SatComVuButton.pack(anchor=W)
 SatComVuButton.config(variable=CurrentButton,value=VuButtonNum,indicatoron=False)
 
-RepeaterButton = Radiobutton(win,text = "Local Repeater",command=RelaySwitch)
+RepeaterButton = Radiobutton(win,text = "Local Repeater",command=RelayGroupSwitch,selectcolor="Red")
 RepeaterButton.pack(anchor=W)
 RepeaterButton.config(variable=CurrentButton,value=RepeaterButtonNum,indicatoron=False)
 
-SatTlmVButton = Radiobutton(win,text = "VHF Telemetry",command=RelaySwitch)
+SatTlmVButton = Radiobutton(win,text = "VHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
 SatTlmVButton.pack(anchor=W)
 SatTlmVButton.config(variable=CurrentButton,value=VHFTlmButtonNum,indicatoron=False)
 
-SatTlmUButton = Radiobutton(win,text = "UHF Telemetry",command=RelaySwitch)
+SatTlmUButton = Radiobutton(win,text = "UHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
 SatTlmUButton.pack(anchor=W)
 SatTlmUButton.config(variable=CurrentButton,value=UHFTlmButtonNum,indicatoron=False)
 
