@@ -110,13 +110,12 @@ CurrentButton=IntVar()
 CurrentButton.set=UvButtonNum
 win.title="BF"
 
-#Callback routines for checkbuttons
+#Callback routines for checkbuttons.  They set the relay to the value of the checkbox
+
 def Switch2mPreamp():
-    print("2M Switch")
-    relayPreamp2m.setOnly(On)
+    relayPreamp2m.setOnly(P2mValue.get()==1)
 def Switch70Preamp():
-    print("70cm Switch")
-    relayPreamp70.setOnly(On)
+    relayPreamp70.setOnly(P70Value.get()==1)
 
 
 
