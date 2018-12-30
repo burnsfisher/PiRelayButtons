@@ -60,7 +60,11 @@ import RPi.GPIO as GPIO
 
 
 
-class Relay:
+class Relay: #This is for the Sunfounder/Huayao relay board where a high GPIO turns the relay coil off.
+    
+    # If you create a Relay instance with a checkbutton, that checkbutton is activated or deactivated
+    # when the relay is turned on or off
+    
     def __init__(self,gpioNum1,initialState,checkbutton=None):
         self.gpioNum = gpioNum1
         GPIO.setup(self.gpioNum,GPIO.OUT)
@@ -68,7 +72,7 @@ class Relay:
         self.set(initialState)
     def setOnly(self,state):
         self.state= state
-        GPIO.output(self.gpioNum,self.state)
+        GPIO.output(self.gpioNum,not self.state) #High for off, low for on
 
     def set(self,state):
         self.setOnly(state)
@@ -84,13 +88,13 @@ class Relay:
 
 GPIO.setmode(GPIO.BOARD)
 
-Off=True
-On=False
-TS2K=True
-SDR=False
-Beam=False
-JPole=True
-Omni=True
+On=True #For Preamps (Default)
+Off=False
+TS2K=False #For Beam Bus TS2K End (Default)
+SDR=True
+Beam=True
+JPole=False
+Omni=False
 
 #Here are a few buttons that are overrides of the standards.  For example turning the preamp
 # on and off Checkbutton--
@@ -107,7 +111,6 @@ VHFTlmButtonNum=4
 
 win = Tk()
 CurrentButton=IntVar()
-CurrentButton.set=UvButtonNum
 win.title="BF"
 
 #Callback routines for checkbuttons.  They set the relay to the value of the checkbox
@@ -117,8 +120,6 @@ def Switch2mPreamp():
 def Switch70Preamp():
     relayPreamp70.setOnly(P70Value.get()==1)
 
-
-
 P70Value = IntVar()
 Preamp70Button = Checkbutton(win,text="70Cm Preamp",variable=P70Value,command=Switch70Preamp)
 Preamp70Button.pack(anchor=W)
@@ -127,24 +128,23 @@ P2mValue=IntVar()
 Preamp2mButton = Checkbutton(win,text="2M Preamp",variable=P2mValue,command=Switch2mPreamp)
 Preamp2mButton.pack(anchor=W)
 
-
 #Define the GPIOs for various relays
 relayPreamp70 = Relay(23,Off,Preamp70Button)
-relayPreamp2m = Relay(29,On,Preamp2mButton)
+relayPreamp2m = Relay(29,Off,Preamp2mButton)
 relay2mBeamTS2KorSDR = Relay(31,TS2K)
 relay70BeamTS2KorSDR = Relay(33,TS2K)
 relayTS2KbeamOrJPole = Relay(35,Beam)
 relaySDRbeamOrOmni = Relay(37,Omni)
 
-relaySpare1 = Relay(21,On)
-relaySpare2 = Relay(19,On)
+relaySpare1 = Relay(21,Off)
+relaySpare2 = Relay(19,Off)
 
 RelayList = [relayPreamp70,relayPreamp2m,relay2mBeamTS2KorSDR,relay70BeamTS2KorSDR,relayTS2KbeamOrJPole,
              relaySDRbeamOrOmni]
 NumberOfRelays = 6
 
 RelayActionsForButton = [
-    #2mPre 70Pre 2mBeam 70Beam TS2KAnt SDRAnt<-Relays
+    #70Pre 2mPre 2mBeam 70Beam TS2KAnt SDRAnt<-Relays
     [Off,  On,   TS2K,  TS2K,   Beam,  Omni], #UVButton
     [On,   Off,  TS2K,  TS2K,   Beam,  Omni], #VUButton
     [Off,  Off,  TS2K,  TS2K,   JPole, Omni], #Repeater
@@ -165,8 +165,9 @@ def RelayGroupSwitch():
     for i in range(NumberOfRelays):
         thisRelay = RelayList[i]
         thisRelay.set(RelaySettings[i])
+        print("Setting relay",i, "to", RelaySettings[i])
 #### Widgets
-
+print(CurrentButton.get())
 # Here are some radio buttons--only one is active at a time.  This are the "main functions"
 SatComUvButton = Radiobutton(win,text = "U/v Satcom",command=RelayGroupSwitch,selectcolor="Red")
 SatComUvButton.pack(anchor=W)
@@ -191,6 +192,10 @@ SatTlmUButton.config(variable=CurrentButton,value=UHFTlmButtonNum,indicatoron=Fa
 
 ExitButton = Radiobutton(win,text = "Exit",command=Leave,variable=CurrentButton,value=99,indicatoron=False)
 ExitButton.pack(anchor=W)
+
+#Set the default button
+CurrentButton.set(RepeaterButtonNum)
+RelayGroupSwitch() #Set up everything for the above default button
 
 
 mainloop()
