@@ -57,7 +57,7 @@
 #import tkinter as tk
 from tkinter import *
 import RPi.GPIO as GPIO
-
+import time
 
 
 class Relay: #This is for the Sunfounder/Huayao relay board where a high GPIO turns the relay coil off.
@@ -129,14 +129,14 @@ Preamp2mButton = Checkbutton(win,text="2M Preamp",variable=P2mValue,command=Swit
 Preamp2mButton.pack(anchor=W)
 
 #Define the GPIOs for various relays
-relayPreamp70 = Relay(23,Off,Preamp70Button)
-relayPreamp2m = Relay(29,Off,Preamp2mButton)
-relay2mBeamTS2KorSDR = Relay(31,TS2K)
-relay70BeamTS2KorSDR = Relay(33,TS2K)
-relayTS2KbeamOrJPole = Relay(35,Beam)
-relaySDRbeamOrOmni = Relay(37,Omni)
+relayPreamp70 = Relay(21,Off,Preamp70Button)
+relayPreamp2m = Relay(23,Off,Preamp2mButton)
+relay2mBeamTS2KorSDR = Relay(29,TS2K)
+relay70BeamTS2KorSDR = Relay(31,TS2K)
+relayTS2KbeamOrJPole = Relay(33,JPole)
+relaySDRbeamOrOmni = Relay(35,Omni)
 
-relaySpare1 = Relay(21,Off)
+relaySpare1 = Relay(37,Off) #Broken on one relay board
 relaySpare2 = Relay(19,Off)
 
 RelayList = [relayPreamp70,relayPreamp2m,relay2mBeamTS2KorSDR,relay70BeamTS2KorSDR,relayTS2KbeamOrJPole,
@@ -197,6 +197,21 @@ ExitButton.pack(anchor=W)
 CurrentButton.set(RepeaterButtonNum)
 RelayGroupSwitch() #Set up everything for the above default button
 
+IDRelays = False
+
+#This is to make sure we know which relay is which
+if IDRelays:
+    for i in range(NumberOfRelays):
+        thisRelay = RelayList[i]
+        thisRelay.set(True)
+        print("Setting relay",i, "to True")
+        time.sleep(1)
+
+    for i in range(NumberOfRelays):
+        thisRelay = RelayList[i]
+        thisRelay.set(False)
+        print("Setting relay",i, "to False")
+        time.sleep(1)
 
 mainloop()
 
