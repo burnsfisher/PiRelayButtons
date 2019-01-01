@@ -53,5 +53,5 @@ In addition there are some checkboxes for the preamps which are updated to
 match the preamp state when you click on a configuration.  However they can
 also be checked or unchecked to override the default for the preamps.
 
-[Schematic](AntennaSwitcher.png)
+Schematic of the coax relays as a [PNG File](AntennaSwitcher.png) or a [PDF File](AntennaSwitcher.pdf)
 
