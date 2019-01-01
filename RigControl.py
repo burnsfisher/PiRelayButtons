@@ -55,9 +55,11 @@
 
 
 #import tkinter as tk
-from tkinter import *
+
+import tkinter as tk
 import RPi.GPIO as GPIO
 import time
+import sys
 
 
 class Relay: #This is for the Sunfounder/Huayao relay board where a high GPIO turns the relay coil off.
@@ -109,10 +111,10 @@ UHFTlmButtonNum=3
 VHFTlmButtonNum=4
 
 
-win = Tk()
-CurrentButton=IntVar()
-win.title="BF"
-
+win = tk.Tk()
+#win.geometry("200x200")
+CurrentButton=tk.IntVar()
+tk.Label(win,text="Choose the configuration you are using:").grid(row=0,columnspan=2,sticky=tk.W)
 #Callback routines for checkbuttons.  They set the relay to the value of the checkbox
 
 def Switch2mPreamp():
@@ -120,14 +122,17 @@ def Switch2mPreamp():
 def Switch70Preamp():
     relayPreamp70.setOnly(P70Value.get()==1)
 
-P70Value = IntVar()
-Preamp70Button = Checkbutton(win,text="70Cm Preamp",variable=P70Value,command=Switch70Preamp)
-Preamp70Button.pack(anchor=W)
+P70Value = tk.IntVar()
+tk.Label(win,text="Preamp Override:").grid(row=8,column=0,sticky=tk.E)
+tk.Label(win,text="________________________________________________________________________________").grid(row=7,column=0,columnspan=2)
 
-P2mValue=IntVar()
-Preamp2mButton = Checkbutton(win,text="2M Preamp",variable=P2mValue,command=Switch2mPreamp)
-Preamp2mButton.pack(anchor=W)
 
+Preamp70Button = tk.Checkbutton(win,text="70Cm",variable=P70Value,command=Switch70Preamp)
+Preamp70Button.grid(column=1,row=8)
+
+P2mValue=tk.IntVar()
+Preamp2mButton = tk.Checkbutton(win,text="2M",variable=P2mValue,command=Switch2mPreamp)
+Preamp2mButton.grid(column=1,row=8,sticky=tk.W)
 #Define the GPIOs for various relays
 relayPreamp70 = Relay(21,Off,Preamp70Button)
 relayPreamp2m = Relay(23,Off,Preamp2mButton)
@@ -169,29 +174,31 @@ def RelayGroupSwitch():
 #### Widgets
 print(CurrentButton.get())
 # Here are some radio buttons--only one is active at a time.  This are the "main functions"
-SatComUvButton = Radiobutton(win,text = "U/v Satcom",command=RelayGroupSwitch,selectcolor="Red")
-SatComUvButton.pack(anchor=W)
-SatComUvButton.config(variable=CurrentButton,value=UvButtonNum,indicatoron=False)
+SatComUvButton = tk.Radiobutton(win,text = "U/v Satcom",command=RelayGroupSwitch,selectcolor="Red")
+#SatComUvButton.pack(side=tk.RIGHT)
+SatComUvButton.config(variable=CurrentButton,value=UvButtonNum,indicatoron=False,width=30,pady=20)
+SatComUvButton.grid(row=4,column=0)
 
-SatComVuButton = Radiobutton(win,text = "V/u Satcom",command=RelayGroupSwitch,selectcolor="Red")
-SatComVuButton.pack(anchor=W)
-SatComVuButton.config(variable=CurrentButton,value=VuButtonNum,indicatoron=False)
+SatComVuButton = tk.Radiobutton(win,text = "V/u Satcom",command=RelayGroupSwitch,selectcolor="Red")
+SatComVuButton.grid(row=4,column=1,columnspan=1)
+SatComVuButton.config(variable=CurrentButton,value=VuButtonNum,indicatoron=False,width=30,pady=20)
 
-RepeaterButton = Radiobutton(win,text = "Local Repeater",command=RelayGroupSwitch,selectcolor="Red")
-RepeaterButton.pack(anchor=W)
-RepeaterButton.config(variable=CurrentButton,value=RepeaterButtonNum,indicatoron=False)
+RepeaterButton = tk.Radiobutton(win,text = "Local Repeater",command=RelayGroupSwitch,selectcolor="Red")
+RepeaterButton.grid(row=6,column=0,columnspan=2)
+RepeaterButton.config(variable=CurrentButton,value=RepeaterButtonNum,indicatoron=False,width=30,pady=20)
 
-SatTlmVButton = Radiobutton(win,text = "VHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
-SatTlmVButton.pack(anchor=W)
-SatTlmVButton.config(variable=CurrentButton,value=VHFTlmButtonNum,indicatoron=False)
+SatTlmVButton = tk.Radiobutton(win,text = "VHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
+SatTlmVButton.grid(row=5,column=0,columnspan=1)
+SatTlmVButton.config(variable=CurrentButton,value=VHFTlmButtonNum,indicatoron=False,width=30,pady=20)
 
-SatTlmUButton = Radiobutton(win,text = "UHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
-SatTlmUButton.pack(anchor=W)
-SatTlmUButton.config(variable=CurrentButton,value=UHFTlmButtonNum,indicatoron=False)
+SatTlmUButton = tk.Radiobutton(win,text = "UHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
+SatTlmUButton.grid(row=5,column=1,columnspan=1)
+SatTlmUButton.config(variable=CurrentButton,value=UHFTlmButtonNum,indicatoron=False,width=30,pady=20)
 
 
-ExitButton = Radiobutton(win,text = "Exit",command=Leave,variable=CurrentButton,value=99,indicatoron=False)
-ExitButton.pack(anchor=W)
+ExitButton = tk.Radiobutton(win,text = "Exit",command=Leave,variable=CurrentButton,value=99,indicatoron=False)
+ExitButton.grid(row=8,column=0,sticky=tk.W)
+win.title("WB1FJ Antenna Switcher")
 
 #Set the default button
 CurrentButton.set(RepeaterButtonNum)
@@ -213,6 +220,6 @@ if IDRelays:
         print("Setting relay",i, "to False")
         time.sleep(1)
 
-mainloop()
+win.mainloop()
 
 
