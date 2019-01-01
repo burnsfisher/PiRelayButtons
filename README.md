@@ -49,5 +49,9 @@ UHF Telemetry	Beam|Preamp70|On
 "			            |TS2K| TS2K Bus
 "			            |SDR| SDR Bus
 
+In addition there are some checkboxes for the preamps which are updated to
+match the preamp state when you click on a configuration.  However they can
+also be checked or unchecked to override the default for the preamps.
+
 [Schematic](AntennaSwitcher.png)
 
