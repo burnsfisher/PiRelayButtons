@@ -53,5 +53,6 @@ In addition there are some checkboxes for the preamps which are updated to
 match the preamp state when you click on a configuration.  However they can
 also be checked or unchecked to override the default for the preamps.
 
-Schematic of the coax relays as a [PNG File](AntennaSwitcher.png) or a [PDF File](AntennaSwitcher.pdf)
+Schematic of the coax relays as a [PNG File](AntennaSwitcher.png) or a [PDF File](AntennaSwitcher.pdf).  Note that the 
+schematics do not show that each relay has a flyback diode across it.
 
