@@ -61,6 +61,7 @@ import RPi.GPIO as GPIO
 import time
 import sys
 
+DebugRelaySet = False #Set true to get some printouts
 
 class Relay: #This is for the Sunfounder/Huayao relay board where a high GPIO turns the relay coil off.
     
@@ -122,36 +123,39 @@ def Switch2mPreamp():
 def Switch70Preamp():
     relayPreamp70.setOnly(P70Value.get()==1)
 
-#Define the GPIOs for various relays
-GPIO.setmode(GPIO.BOARD) #By board pin number
-relayPreamp70 = Relay(21,Off)
-relayPreamp2m = Relay(23,Off)
-relay2mBeamTS2KorSDR = Relay(29,TS2K)
-relay70BeamTS2KorSDR = Relay(31,TS2K)
-relayTS2KbeamOrJPole = Relay(33,JPole)
-relaySDRbeamOrOmni = Relay(35,Omni)
-relaySpare1 = Relay(37,Off) #Broken on one relay board
-relaySpare2 = Relay(19,Off)
+#Define the relay index numbers for various relays
+relayPreamp70 = 0
+relayPreamp2m = 1
+relay2mBeamTS2KorSDR = 2
+relay70BeamTS2KorSDR = 3
+relayTS2KbeamOrJPole = 4
+relaySDRbeamOrOmni = 5
 
-RelayList = [relayPreamp70,relayPreamp2m,relay2mBeamTS2KorSDR,relay70BeamTS2KorSDR,relayTS2KbeamOrJPole,
-             relaySDRbeamOrOmni]
+GPIO.setmode(GPIO.BOARD) #Define GPIOs by board pin number
+#Now define the pin numbers for each relay index
+#relayPinNumbers=[5,7,11,13,15,8]
+relayPinNumbers=[29,31,32,33,35,37] #These are for PiZero with SPI Screen
 
+#Now create the relay objects for each relay
+RelayList = []
+for i in range (0,len(relayPinNumbers)):
+    RelayList.append(Relay(relayPinNumbers[i],False))
+            
 #The following table tells what values to set each relay (columns) to for each configuration(row)
 #Row numbers have to match the value passed to the variable in the radio buttons; column number
 #must match the order of the relays in RelayList
 
 RelayActionsForButton = [
-    #70Pre 2mPre 2mBeam 70Beam TS2KAnt SDRAnt<-Relays
-    [Off,  On,   TS2K,  TS2K,   Beam,  Omni], #UVButton
-    [On,   Off,  TS2K,  TS2K,   Beam,  Omni], #VUButton
-    [Off,  Off,  TS2K,  TS2K,   JPole, Omni], #Repeater
-    [On,   Off,  TS2K,  SDR,    Beam,  Beam], #UTelemButton
-    [Off,  On,   SDR,   TS2K,   Beam,  Beam], #VTelemButton
+    #70Pre 2mPre 2mBeam 70Beam TS2KAnt SDRAnt Spares <-Relays
+    [Off,  On,   TS2K,  TS2K,   Beam,  Omni, Off, Off], #UVButton
+    [On,   Off,  TS2K,  TS2K,   Beam,  Omni, Off, Off], #VUButton
+    [Off,  Off,  TS2K,  TS2K,   JPole, Omni, Off, Off], #Repeater
+    [On,   Off,  TS2K,  SDR,    Beam,  Beam, Off, Off], #UTelemButton
+    [Off,  On,   SDR,   TS2K,   Beam,  Beam, Off, Off], #VTelemButton
     ]
 
 
 #Here are callback routines for all the buttons and checkboxes
-DebugRelaySet = False
 def Leave(): #This one is for the exit radio button
     GPIO.cleanup()
     sys.exit(1)
@@ -191,8 +195,8 @@ P2mValue=tk.IntVar()
 Preamp2mButton = tk.Checkbutton(win,text="2M",variable=P2mValue,command=Switch2mPreamp)
 Preamp2mButton.grid(column=1,row=8,sticky=tk.W)
 
-relayPreamp70.setAssociatedButton(Preamp70Button) #Make sure when a configuration sets one of these relays,---
-relayPreamp2m.setAssociatedButton(Preamp2mButton) #...the checkbox matches
+RelayList[relayPreamp70].setAssociatedButton(Preamp70Button) #Make sure when a configuration sets one of these relays,---
+RelayList[relayPreamp2m].setAssociatedButton(Preamp2mButton) #...the checkbox matches
 
 
 # Here are the radio buttons that let you choose the configuration--only one is active at a time.
