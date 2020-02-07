@@ -115,26 +115,26 @@ VuButtonNum=1
 RepeaterButtonNum=2
 UHFTlmButtonNum=3
 VHFTlmButtonNum=4
-
+VUTlmButtonNum=5
 #Callback routines for checkbuttons.  They set the relay to the value of the checkbox
 
 def Switch2mPreamp():
-    relayPreamp2m.setOnly(P2mValue.get()==1)
+    RelayList[relayPreamp2m].setOnly(P2mValue.get()==1)
 def Switch70Preamp():
-    relayPreamp70.setOnly(P70Value.get()==1)
+    RelayList[relayPreamp70].setOnly(P70Value.get()==1)
 
 #Define the relay index numbers for various relays
 relayPreamp70 = 0
-relayPreamp2m = 1
-relay2mBeamTS2KorSDR = 2
-relay70BeamTS2KorSDR = 3
-relayTS2KbeamOrJPole = 4
-relaySDRbeamOrOmni = 5
+relayPreamp2m = 1 #ok
+relay2mBeamTS2KorSDR = 2 #Ok
+relay70BeamTS2KorSDR = 3 #ok
+relayTS2KbeamOrJPole = 4 #ok
+relaySDRbeamOrOmni = 5 #ok
 
 GPIO.setmode(GPIO.BOARD) #Define GPIOs by board pin number
 #Now define the pin numbers for each relay index
 #relayPinNumbers=[5,7,11,13,15,8]
-relayPinNumbers=[29,31,32,33,35,37] #These are for PiZero with SPI Screen
+relayPinNumbers=[37,40,29,31,33,35] #These are for PiZero with SPI Screen
 
 #Now create the relay objects for each relay
 RelayList = []
@@ -152,6 +152,7 @@ RelayActionsForButton = [
     [Off,  Off,  TS2K,  TS2K,   JPole, Omni, Off, Off], #Repeater
     [On,   Off,  TS2K,  SDR,    Beam,  Beam, Off, Off], #UTelemButton
     [Off,  On,   SDR,   TS2K,   Beam,  Beam, Off, Off], #VTelemButton
+    [On,   On,   SDR,   SDR,   JPole, JPole, Off, Off]  #VUTelemButton
     ]
 
 
@@ -209,9 +210,11 @@ SatComVuButton = tk.Radiobutton(win,text = "V/u Satcom",command=RelayGroupSwitch
 SatComVuButton.grid(row=4,column=1,columnspan=1)
 SatComVuButton.config(variable=CurrentButton,value=VuButtonNum,indicatoron=False,width=30,pady=20)
 
+
 RepeaterButton = tk.Radiobutton(win,text = "Local Repeater",command=RelayGroupSwitch,selectcolor="Red")
-RepeaterButton.grid(row=6,column=0,columnspan=2)
+RepeaterButton.grid(row=6,column=0,columnspan=1)
 RepeaterButton.config(variable=CurrentButton,value=RepeaterButtonNum,indicatoron=False,width=30,pady=20)
+
 
 SatTlmVButton = tk.Radiobutton(win,text = "VHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
 SatTlmVButton.grid(row=5,column=0,columnspan=1)
@@ -220,6 +223,10 @@ SatTlmVButton.config(variable=CurrentButton,value=VHFTlmButtonNum,indicatoron=Fa
 SatTlmUButton = tk.Radiobutton(win,text = "UHF Telemetry",command=RelayGroupSwitch,selectcolor="Red")
 SatTlmUButton.grid(row=5,column=1,columnspan=1)
 SatTlmUButton.config(variable=CurrentButton,value=UHFTlmButtonNum,indicatoron=False,width=30,pady=20)
+
+SatTlmVUButton = tk.Radiobutton(win,text = "VU Telemetry",command=RelayGroupSwitch,selectcolor="Red")
+SatTlmVUButton.grid(row=6,column=1,columnspan=1)
+SatTlmVUButton.config(variable=CurrentButton,value=VUTlmButtonNum,indicatoron=False,width=30,pady=20)
 
 
 ExitButton = tk.Radiobutton(win,text = "Exit",command=Leave,variable=CurrentButton,value=99,indicatoron=False)
@@ -233,13 +240,13 @@ DebugRelayID = False
 
 #This is to make sure we know which relay is which
 if DebugRelayID:
-    for i in range(NumberOfRelays):
+    for i in range(len(RelayList)):
         thisRelay = RelayList[i]
         thisRelay.set(True)
         print("Setting relay",i, "to True")
         time.sleep(1)
 
-    for i in range(NumberOfRelays):
+    for i in range(len(RelayList)):
         thisRelay = RelayList[i]
         thisRelay.set(False)
         print("Setting relay",i, "to False")
