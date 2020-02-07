@@ -48,6 +48,12 @@ UHF Telemetry	Beam|Preamp70|On
 "			            |Beam2m| TS2K Bus
 "			            |TS2K| TS2K Bus
 "			            |SDR| SDR Bus
+UV Telemetry    Beam|Preamp70|On
+"                 |Preamp2m|On
+"                                   |Beam70| SDR Bus
+"                                   |Beam2m| SDR Bus
+"                                   |TS2K| JPole
+"                                   |SDR| SDR Bus
 
 In addition there are some checkboxes for the preamps which are updated to
 match the preamp state when you click on a configuration.  However they can
