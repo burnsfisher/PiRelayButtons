@@ -62,3 +62,5 @@ also be checked or unchecked to override the default for the preamps.
 Schematic of the coax relays as a [PNG File](AntennaSwitcher.png) or a [PDF File](AntennaSwitcher.pdf).  Note that the 
 schematics do not show that each relay has a flyback diode across it.
 
+Not shown anywhere but necessary are another set of relays triggered by the 3V Raspberry Pi GPIO outputs which switch the 12V coils of the coax relays as well as switching 12V power to the preamps.  Here is an Amazon link to what I used:  https://www.amazon.com/gp/product/B07DNB2NGD
+
