@@ -31,21 +31,21 @@
 #		    TS2K: TS2K
 #		    SDR: Omni
 #
-#Local Repeater: 	  Preamp70 off
+#Local Repeater:    Preamp70 off
 #		    Preamp2m off
 #		    Beam70: TS2K Bus
 #		    Beam2m: TS2K Bus
 #		    TS2K: J-pole
 #		    SDR: Omni
 #
-#UHF Beam Telem: 	  Preamp70: on
+#UHF Beam Telem:    Preamp70: on
 #		    Preamp2m: off
 #		    Beam70: SDR Bus
 #		    Beam2m: TS2K Bus
 #		    TS2K: TS2K Bus
 #		    SDR: SDR Bus
 #
-#VHF Beam Telem: 	  Preamp70 off
+#VHF Beam Telem:   Preamp70 off
 #		    Preamp2m on
 #		    Beam70: TS2K Bus
 #		    Beam2m: SDR Bus
@@ -53,6 +53,8 @@
 #		    SDR: SDR Bus
 
 
+UDP_IP = "10.0.1.255"
+UDP_PORT = 9932
 
 #import tkinter as tk
 
@@ -60,6 +62,7 @@ import tkinter as tk
 import RPi.GPIO as GPIO
 import time
 import sys
+import socket
 
 DebugRelaySet = False #Set true to get some printouts
 
@@ -252,6 +255,40 @@ if DebugRelayID:
         print("Setting relay",i, "to False")
         time.sleep(1)
 
-win.mainloop()
+sock = socket.socket(socket.AF_INET, # Internet
+                     socket.SOCK_DGRAM) # UDP
+sock.bind((UDP_IP, UDP_PORT))
+sock.settimeout(.1)
 
+while 1:
+    win.update() # This allows me to do something else besides Tk.   Equiv to mainloop, but it returns
+    try:
+        databytes, addr = sock.recvfrom(128) # buffer size is 128 bytes
+        datastr = (databytes.decode('UTF-8'))
+        strList=datastr.split(',')
+        downlink = int(float(strList[1]))
+        print("AOS: downlink is ",strList[1])
+        curBut = CurrentButton.get()
+        if (downlink < 400):
+            if(curBut == VuButtonNum):
+                CurrentButton.set(UvButtonNum)
+            if(curBut == UHFTlmButtonNum):
+                CurrentButton.set(VHFTlmButtonNum)
+        if (downlink >= 400):
+            if(curBut == UvButtonNum):
+                CurrentButton.set(VuButtonNum)
+            if(curBut == VHFTlmButtonNum):
+                CurrentButton.set(UHFTlmButtonNum)
+        RelayGroupSwitch();
+    except:
+        pass
+
+#win.mainloop()
+
+UvButtonNum=0
+VuButtonNum=1
+RepeaterButtonNum=2
+UHFTlmButtonNum=3
+VHFTlmButtonNum=4
+VUTlmButtonNum=5
 
