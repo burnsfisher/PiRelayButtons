@@ -155,7 +155,7 @@ RelayActionsForButton = [
     [Off,  Off,  TS2K,  TS2K,   JPole, Omni, Off, Off], #Repeater
     [On,   Off,  TS2K,  SDR,    Beam,  Beam, Off, Off], #UTelemButton
     [Off,  On,   SDR,   TS2K,   Beam,  Beam, Off, Off], #VTelemButton
-    [On,   On,   SDR,   SDR,   JPole, JPole, Off, Off]  #VUTelemButton
+    [On,   On,   SDR,   SDR,   JPole,  Beam, Off, Off]  #VUTelemButton
     ]
 
 
