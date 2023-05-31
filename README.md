@@ -5,7 +5,7 @@ This is a GUI to control relays using a button box.  The names of the relays are
 
 From here on, we have the description of *MY* use.  My intent is to switch a software defined radio receiver (telemetry) and a Kenwood TS-2000 (TS2K) in various combinations with an omni dual band satellite antenna, an LEO Pack 70cm and 2m beam,  and a dual-band J-pole for local work.
 
-Note that the latest version also listens for a UDP message specifying the uplink and downlink frequency of a satellite.  It looks at the downlink frequency and based on the band, changes the switches.  The message is one that could be sent via MacDoppler's scripting facility as of V2.39b1 when Don added the capability I needed.  Thanks Don!
+Note that the latest version also listens for a UDP message specifying the uplink and downlink frequency of a satellite.  It looks at the downlink frequency and based on the band, changes the switches.  The message is one that could be sent via MacDoppler's scripting facility as of V2.39b1 when Don added the capability I needed.  Thanks Don!  It also can read the UDP message sent by the CSN Technologies S.A.T. satellite radio/rotator controller.
 
 ## Relays:
 Name | Description

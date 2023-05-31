@@ -53,7 +53,7 @@
 #		    SDR: SDR Bus
 
 
-UDP_IP = "10.0.1.255"
+UDP_IP = ""
 UDP_PORT = 9932
 
 #import tkinter as tk
@@ -265,9 +265,16 @@ while 1:
     try:
         databytes, addr = sock.recvfrom(128) # buffer size is 128 bytes
         datastr = (databytes.decode('UTF-8'))
+        #print("UDP message:",datastr)
         strList=datastr.split(',')
-        downlink = int(float(strList[1]))
-        print("AOS: downlink is ",strList[1])
+        #print(strList)
+        if(strList[0] == "SAT" and strList[1]=="TRANSPONDER"):
+            #This would be for the CSN Technologies SAT device
+            downlink = int(float(strList[5]))/1000000 #Make it in MHz
+        else:
+            #This is for MacDoppler, but it requires a script that WB1FJ wrote
+            downlink = int(float(strList[1]))
+        print("Downlink is ",downlink)
         curBut = CurrentButton.get()
         if (downlink < 400):
             if(curBut == VuButtonNum):
